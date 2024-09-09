@@ -15,7 +15,7 @@ def get_gdp_data():
     raw_gdp_df = pd.read_csv(DATA_FILENAME)
     
     # Define year range
-    MIN_YEAR, MAX_YEAR = 1960, 2022
+    MIN_YEAR, MAX_YEAR = 2018, 2024
     
     # Reshape data from wide to long format
     gdp_df = raw_gdp_df.melt(
