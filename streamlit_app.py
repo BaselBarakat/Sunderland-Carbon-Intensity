@@ -73,23 +73,23 @@ Welcome to the Sunderland Carbon Intensity Dashboard! This interactive platform 
 Carbon intensity refers to the amount of carbon dioxide (CO₂) emissions produced per unit of energy consumed. It is a crucial metric for understanding the environmental impact of energy use and helps identify opportunities for reducing greenhouse gas emissions. The Sunderland Carbon Intensity Dashboard brings together data from various sources to monitor the city’s carbon footprint, track changes over time, and support decision-making for a more sustainable future.
 Key Features of the Dashboard
 
-    Real-Time Monitoring: View up-to-date information on carbon intensity levels across Sunderland, helping residents, businesses, and policymakers understand current emissions and take timely action.
+Real-Time Monitoring: View up-to-date information on carbon intensity levels across Sunderland, helping residents, businesses, and policymakers understand current emissions and take timely action.
 
-    Historical Data Analysis: Explore past trends in carbon intensity, analyze patterns over different time frames, and identify key periods of high or low emissions.
+Historical Data Analysis: Explore past trends in carbon intensity, analyze patterns over different time frames, and identify key periods of high or low emissions.
 
-    Interactive Visualizations: Utilize a range of dynamic charts, graphs, and maps to visualize data effectively, making complex information easy to understand and actionable.
+Interactive Visualizations: Utilize a range of dynamic charts, graphs, and maps to visualize data effectively, making complex information easy to understand and actionable.
 
-    Impact Assessment: Understand how different energy sources and activities contribute to Sunderland's overall carbon footprint, aiding in the development of targeted strategies for emissions reduction.
+Impact Assessment: Understand how different energy sources and activities contribute to Sunderland's overall carbon footprint, aiding in the development of targeted strategies for emissions reduction.
 
 Why Monitor Carbon Intensity?
 
 Tracking carbon intensity is essential for achieving local and national climate goals. By monitoring this metric, Sunderland can:
 
-    Promote Cleaner Energy: Encourage the use of renewable energy sources and reduce reliance on fossil fuels.
+Promote Cleaner Energy: Encourage the use of renewable energy sources and reduce reliance on fossil fuels.
 
-    Enhance Sustainability Planning: Support the city’s efforts to become more sustainable by providing data-driven insights for urban planning, transport, and energy policies.
+Enhance Sustainability Planning: Support the city’s efforts to become more sustainable by providing data-driven insights for urban planning, transport, and energy policies.
 
-    Engage the Community: Raise awareness among residents and businesses about their carbon footprint and inspire collective action towards reducing emissions.
+Engage the Community: Raise awareness among residents and businesses about their carbon footprint and inspire collective action towards reducing emissions.
 
 Conclusion
 
