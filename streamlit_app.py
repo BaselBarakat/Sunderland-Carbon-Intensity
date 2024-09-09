@@ -5,7 +5,7 @@ from pathlib import Path
 
 # Set the title and favicon that appear in the Browser's tab bar.
 st.set_page_config(
-    page_title='GDP dashboard',
+    page_title='Sunderland Carbon Intensity',
     page_icon=':earth_americas:', # This is an emoji shortcode. Could be a URL too.
 )
 
@@ -64,11 +64,36 @@ gdp_df = get_gdp_data()
 
 # Set the title that appears at the top of the page.
 '''
-# :earth_americas: GDP dashboard
+# :earth_americas: Sunderland Carbon Intensity
 
-Browse GDP data from the [World Bank Open Data](https://data.worldbank.org/) website. As you'll
-notice, the data only goes to 2022 right now, and datapoints for certain years are often missing.
-But it's otherwise a great (and did I mention _free_?) source of data.
+Introduction to the Sunderland Carbon Intensity Dashboard
+
+Welcome to the Sunderland Carbon Intensity Dashboard! This interactive platform is designed to provide a comprehensive overview of carbon emissions in Sunderland, offering real-time and historical insights into the city's carbon intensity levels.
+
+Carbon intensity refers to the amount of carbon dioxide (CO₂) emissions produced per unit of energy consumed. It is a crucial metric for understanding the environmental impact of energy use and helps identify opportunities for reducing greenhouse gas emissions. The Sunderland Carbon Intensity Dashboard brings together data from various sources to monitor the city’s carbon footprint, track changes over time, and support decision-making for a more sustainable future.
+Key Features of the Dashboard
+
+    Real-Time Monitoring: View up-to-date information on carbon intensity levels across Sunderland, helping residents, businesses, and policymakers understand current emissions and take timely action.
+
+    Historical Data Analysis: Explore past trends in carbon intensity, analyze patterns over different time frames, and identify key periods of high or low emissions.
+
+    Interactive Visualizations: Utilize a range of dynamic charts, graphs, and maps to visualize data effectively, making complex information easy to understand and actionable.
+
+    Impact Assessment: Understand how different energy sources and activities contribute to Sunderland's overall carbon footprint, aiding in the development of targeted strategies for emissions reduction.
+
+Why Monitor Carbon Intensity?
+
+Tracking carbon intensity is essential for achieving local and national climate goals. By monitoring this metric, Sunderland can:
+
+    Promote Cleaner Energy: Encourage the use of renewable energy sources and reduce reliance on fossil fuels.
+
+    Enhance Sustainability Planning: Support the city’s efforts to become more sustainable by providing data-driven insights for urban planning, transport, and energy policies.
+
+    Engage the Community: Raise awareness among residents and businesses about their carbon footprint and inspire collective action towards reducing emissions.
+
+Conclusion
+
+The Sunderland Carbon Intensity Dashboard is a valuable tool for anyone interested in understanding and reducing the city’s carbon footprint. Whether you are a resident, business owner, or policymaker, this dashboard provides the data and insights needed to make informed decisions for a greener Sunderland. Explore the dashboard today to see how you can contribute to a sustainable future!
 '''
 
 # Add some spacing
