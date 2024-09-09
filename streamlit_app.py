@@ -9,7 +9,7 @@ st.set_page_config(page_title='Sunderland Carbon Intensity', page_icon=':earth_a
 @st.cache_data
 def get_carbon_data():
     """Load Carbon Intensity data from a CSV file with caching."""
-    DATA_FILENAME = Path(__file__).parent / 'data/carbon_intensity.csv'
+    DATA_FILENAME = Path(__file__).parent / 'data/carbon.csv'
     raw_carbon_df = pd.read_csv(DATA_FILENAME)
 
     # Convert 'from' and 'to' columns to datetime format
