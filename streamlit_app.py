@@ -9,7 +9,7 @@ st.set_page_config(page_title='Sunderland Carbon Intensity', page_icon=':earth_a
 @st.cache_data
 def get_carbon_data():
     """Load Carbon Intensity data from a CSV file with caching."""
-    DATA_FILENAME = Path(__file__).parent / 'data/carbon.csv'
+    DATA_FILENAME = Path(__file__).parent / 'data/carbon_intensity.csv'
     raw_carbon_df = pd.read_csv(DATA_FILENAME)
 
     # Convert 'from' and 'to' columns to datetime format
@@ -45,9 +45,9 @@ Explore the dashboard today to see how you can contribute to a sustainable futur
 # Add space between sections
 st.write('')
 
-# Date range slider
+# Date range slider using datetime objects
 min_date, max_date = carbon_df['from'].min(), carbon_df['from'].max()
-selected_dates = st.slider('Select the date range:', min_value=min_date, max_value=max_date, value=(min_date, max_date))
+selected_dates = st.slider('Select the date range:', min_value=min_date, max_value=max_date, value=(min_date, max_date), format="YYYY-MM-DD")
 
 # Filter the data based on the selected date range
 filtered_carbon_df = carbon_df[(carbon_df['from'] >= selected_dates[0]) & (carbon_df['from'] <= selected_dates[1])]
@@ -63,6 +63,73 @@ st.write(filtered_carbon_df.describe())
 # Display selected date range data
 st.write(f"Data from {selected_dates[0].strftime('%Y-%m-%d %H:%M')} to {selected_dates[1].strftime('%Y-%m-%d %H:%M')}")
 st.dataframe(filtered_carbon_df)
+
+
+# import streamlit as st
+# import pandas as pd
+# from pathlib import Path
+
+# # Set the title and favicon for the browser tab
+# st.set_page_config(page_title='Sunderland Carbon Intensity', page_icon=':earth_americas:')
+
+# # Function to load and process Carbon Intensity data
+# @st.cache_data
+# def get_carbon_data():
+#     """Load Carbon Intensity data from a CSV file with caching."""
+#     DATA_FILENAME = Path(__file__).parent / 'data/carbon.csv'
+#     raw_carbon_df = pd.read_csv(DATA_FILENAME)
+
+#     # Convert 'from' and 'to' columns to datetime format
+#     raw_carbon_df['from'] = pd.to_datetime(raw_carbon_df['from'])
+#     raw_carbon_df['to'] = pd.to_datetime(raw_carbon_df['to'])
+    
+#     return raw_carbon_df
+
+# # Load the Carbon Intensity data
+# carbon_df = get_carbon_data()
+
+# # -----------------------------------------------------------------------------
+# # Draw the page content
+
+# # Dashboard Title and Introduction
+# st.title(':earth_americas: Sunderland Carbon Intensity')
+# st.markdown("""
+# ### Introduction to the Sunderland Carbon Intensity Dashboard
+
+# Welcome to the Sunderland Carbon Intensity Dashboard! This interactive platform provides a comprehensive overview of carbon emissions in Sunderland, offering real-time and historical insights into the city's carbon intensity levels.
+
+# **Carbon intensity** refers to the amount of carbon dioxide (CO₂) emissions produced per unit of energy consumed. It is a crucial metric for understanding the environmental impact of energy use and identifying opportunities for reducing greenhouse gas emissions.
+
+# **Key Features of the Dashboard:**
+# - **Real-Time Monitoring:** View up-to-date information on carbon intensity levels across Sunderland.
+# - **Historical Data Analysis:** Explore past trends in carbon intensity.
+# - **Interactive Visualizations:** Utilize dynamic charts, graphs, and maps to visualize data effectively.
+# - **Impact Assessment:** Understand how different energy sources and activities contribute to Sunderland's overall carbon footprint.
+
+# Explore the dashboard today to see how you can contribute to a sustainable future!
+# """)
+
+# # Add space between sections
+# st.write('')
+
+# # Date range slider
+# min_date, max_date = carbon_df['from'].min(), carbon_df['from'].max()
+# selected_dates = st.slider('Select the date range:', min_value=min_date, max_value=max_date, value=(min_date, max_date))
+
+# # Filter the data based on the selected date range
+# filtered_carbon_df = carbon_df[(carbon_df['from'] >= selected_dates[0]) & (carbon_df['from'] <= selected_dates[1])]
+
+# # Carbon Intensity Line Chart
+# st.header('Carbon Intensity Over Time')
+# st.line_chart(filtered_carbon_df, x='from', y='forecast')
+
+# # Display summary statistics
+# st.header('Carbon Intensity Statistics')
+# st.write(filtered_carbon_df.describe())
+
+# # Display selected date range data
+# st.write(f"Data from {selected_dates[0].strftime('%Y-%m-%d %H:%M')} to {selected_dates[1].strftime('%Y-%m-%d %H:%M')}")
+# st.dataframe(filtered_carbon_df)
 
 # import streamlit as st
 # import pandas as pd
