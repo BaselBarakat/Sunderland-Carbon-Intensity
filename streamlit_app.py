@@ -10,7 +10,7 @@ st.set_page_config(page_title='Sunderland Carbon Intensity', page_icon=':earth_a
 def get_carbon_data():
     """Load Carbon Intensity data from a CSV file with caching."""
     DATA_FILENAME = Path(__file__).parent / 'data/carbon.csv'
-    raw_carbon_df = pd.read_csv(DATA_FILENAME)
+    raw_carbon_df = pd.read_csv(DATA_FILENAME, parse_dates=['from','to'], infer_datetime_format=True)
 
     # Convert 'from' and 'to' columns to datetime format
     raw_carbon_df['from'] = pd.to_datetime(raw_carbon_df['from'])
@@ -18,8 +18,9 @@ def get_carbon_data():
     
     return raw_carbon_df
 
-# Load the Carbon Intensity data
+# # Load the Carbon Intensity data
 carbon_df = get_carbon_data()
+
 
 # -----------------------------------------------------------------------------
 # Draw the page content
@@ -45,12 +46,31 @@ Explore the dashboard today to see how you can contribute to a sustainable futur
 # Add space between sections
 st.write('')
 
-# Date range slider using datetime objects
-min_date, max_date = carbon_df['from'].min(), carbon_df['from'].max()
-selected_dates = st.slider('Select the date range:', min_value=min_date, max_value=max_date, value=(min_date, max_date), format="YYYY-MM-DD")
 
-# Filter the data based on the selected date range
-filtered_carbon_df = carbon_df[(carbon_df['from'] >= selected_dates[0]) & (carbon_df['from'] <= selected_dates[1])]
+
+# Ensure that the 'from' column is in UTC timezone
+carbon_df['from'] = pd.to_datetime(carbon_df['from'], utc=True)
+# Get the min and max date from the DataFrame
+min_date = carbon_df['from'].min()
+max_date = carbon_df['from'].max()
+
+# Streamlit slider for date range
+selected_dates = st.slider('Select the date range:', 
+                           min_value=min_date.to_pydatetime(), 
+                           max_value=max_date.to_pydatetime(), 
+                           value=(min_date.to_pydatetime(), max_date.to_pydatetime()))
+
+# Convert the selected dates from Streamlit slider to timezone-aware datetime objects
+start_date = pd.to_datetime(selected_dates[0]).tz_convert('UTC')
+end_date = pd.to_datetime(selected_dates[1]).tz_convert('UTC')
+
+# Filter the DataFrame with compatible timezone-aware datetime objects
+filtered_carbon_df = carbon_df[(carbon_df['from'] >= start_date) & (carbon_df['from'] <= end_date)]
+
+# Display filtered DataFrame
+st.write(filtered_carbon_df)
+
+
 
 # Carbon Intensity Line Chart
 st.header('Carbon Intensity Over Time')
@@ -63,6 +83,8 @@ st.write(filtered_carbon_df.describe())
 # Display selected date range data
 st.write(f"Data from {selected_dates[0].strftime('%Y-%m-%d %H:%M')} to {selected_dates[1].strftime('%Y-%m-%d %H:%M')}")
 st.dataframe(filtered_carbon_df)
+
+
 
 
 # import streamlit as st
@@ -112,9 +134,9 @@ st.dataframe(filtered_carbon_df)
 # # Add space between sections
 # st.write('')
 
-# # Date range slider
+# # Date range slider using datetime objects
 # min_date, max_date = carbon_df['from'].min(), carbon_df['from'].max()
-# selected_dates = st.slider('Select the date range:', min_value=min_date, max_value=max_date, value=(min_date, max_date))
+# selected_dates = st.slider('Select the date range:', min_value=min_date, max_value=max_date, value=(min_date, max_date), format="YYYY-MM-DD")
 
 # # Filter the data based on the selected date range
 # filtered_carbon_df = carbon_df[(carbon_df['from'] >= selected_dates[0]) & (carbon_df['from'] <= selected_dates[1])]
@@ -131,284 +153,351 @@ st.dataframe(filtered_carbon_df)
 # st.write(f"Data from {selected_dates[0].strftime('%Y-%m-%d %H:%M')} to {selected_dates[1].strftime('%Y-%m-%d %H:%M')}")
 # st.dataframe(filtered_carbon_df)
 
-# import streamlit as st
-# import pandas as pd
-# import math
-# from pathlib import Path
 
-# # Set the title and favicon for the browser tab
-# st.set_page_config(page_title='Sunderland Carbon Intensity', page_icon=':earth_americas:')
+# # import streamlit as st
+# # import pandas as pd
+# # from pathlib import Path
 
-# # Function to load and process GDP data
-# @st.cache_data
-# def get_gdp_data():
-#     """Load GDP data from a CSV file with caching."""
-#     DATA_FILENAME = Path(__file__).parent / 'data/gdp_data.csv'
-#     raw_gdp_df = pd.read_csv(DATA_FILENAME)
+# # # Set the title and favicon for the browser tab
+# # st.set_page_config(page_title='Sunderland Carbon Intensity', page_icon=':earth_americas:')
+
+# # # Function to load and process Carbon Intensity data
+# # @st.cache_data
+# # def get_carbon_data():
+# #     """Load Carbon Intensity data from a CSV file with caching."""
+# #     DATA_FILENAME = Path(__file__).parent / 'data/carbon.csv'
+# #     raw_carbon_df = pd.read_csv(DATA_FILENAME)
+
+# #     # Convert 'from' and 'to' columns to datetime format
+# #     raw_carbon_df['from'] = pd.to_datetime(raw_carbon_df['from'])
+# #     raw_carbon_df['to'] = pd.to_datetime(raw_carbon_df['to'])
     
-#     # Define year range
-#     MIN_YEAR, MAX_YEAR = 2018, 2022
+# #     return raw_carbon_df
+
+# # # Load the Carbon Intensity data
+# # carbon_df = get_carbon_data()
+
+# # # -----------------------------------------------------------------------------
+# # # Draw the page content
+
+# # # Dashboard Title and Introduction
+# # st.title(':earth_americas: Sunderland Carbon Intensity')
+# # st.markdown("""
+# # ### Introduction to the Sunderland Carbon Intensity Dashboard
+
+# # Welcome to the Sunderland Carbon Intensity Dashboard! This interactive platform provides a comprehensive overview of carbon emissions in Sunderland, offering real-time and historical insights into the city's carbon intensity levels.
+
+# # **Carbon intensity** refers to the amount of carbon dioxide (CO₂) emissions produced per unit of energy consumed. It is a crucial metric for understanding the environmental impact of energy use and identifying opportunities for reducing greenhouse gas emissions.
+
+# # **Key Features of the Dashboard:**
+# # - **Real-Time Monitoring:** View up-to-date information on carbon intensity levels across Sunderland.
+# # - **Historical Data Analysis:** Explore past trends in carbon intensity.
+# # - **Interactive Visualizations:** Utilize dynamic charts, graphs, and maps to visualize data effectively.
+# # - **Impact Assessment:** Understand how different energy sources and activities contribute to Sunderland's overall carbon footprint.
+
+# # Explore the dashboard today to see how you can contribute to a sustainable future!
+# # """)
+
+# # # Add space between sections
+# # st.write('')
+
+# # # Date range slider
+# # min_date, max_date = carbon_df['from'].min(), carbon_df['from'].max()
+# # selected_dates = st.slider('Select the date range:', min_value=min_date, max_value=max_date, value=(min_date, max_date))
+
+# # # Filter the data based on the selected date range
+# # filtered_carbon_df = carbon_df[(carbon_df['from'] >= selected_dates[0]) & (carbon_df['from'] <= selected_dates[1])]
+
+# # # Carbon Intensity Line Chart
+# # st.header('Carbon Intensity Over Time')
+# # st.line_chart(filtered_carbon_df, x='from', y='forecast')
+
+# # # Display summary statistics
+# # st.header('Carbon Intensity Statistics')
+# # st.write(filtered_carbon_df.describe())
+
+# # # Display selected date range data
+# # st.write(f"Data from {selected_dates[0].strftime('%Y-%m-%d %H:%M')} to {selected_dates[1].strftime('%Y-%m-%d %H:%M')}")
+# # st.dataframe(filtered_carbon_df)
+
+# # import streamlit as st
+# # import pandas as pd
+# # import math
+# # from pathlib import Path
+
+# # # Set the title and favicon for the browser tab
+# # st.set_page_config(page_title='Sunderland Carbon Intensity', page_icon=':earth_americas:')
+
+# # # Function to load and process GDP data
+# # @st.cache_data
+# # def get_gdp_data():
+# #     """Load GDP data from a CSV file with caching."""
+# #     DATA_FILENAME = Path(__file__).parent / 'data/gdp_data.csv'
+# #     raw_gdp_df = pd.read_csv(DATA_FILENAME)
     
-#     # Reshape data from wide to long format
-#     gdp_df = raw_gdp_df.melt(
-#         ['Country Code'],
-#         [str(x) for x in range(MIN_YEAR, MAX_YEAR + 1)],
-#         'Year',
-#         'GDP'
-#     )
+# #     # Define year range
+# #     MIN_YEAR, MAX_YEAR = 2018, 2022
     
-#     # Convert 'Year' to numeric
-#     gdp_df['Year'] = pd.to_numeric(gdp_df['Year'])
+# #     # Reshape data from wide to long format
+# #     gdp_df = raw_gdp_df.melt(
+# #         ['Country Code'],
+# #         [str(x) for x in range(MIN_YEAR, MAX_YEAR + 1)],
+# #         'Year',
+# #         'GDP'
+# #     )
     
-#     return gdp_df
+# #     # Convert 'Year' to numeric
+# #     gdp_df['Year'] = pd.to_numeric(gdp_df['Year'])
+    
+# #     return gdp_df
 
-# # Load the GDP data
-# gdp_df = get_gdp_data()
+# # # Load the GDP data
+# # gdp_df = get_gdp_data()
 
-# # -----------------------------------------------------------------------------
-# # Draw the page content
+# # # -----------------------------------------------------------------------------
+# # # Draw the page content
 
-# # Dashboard Title and Introduction
-# st.title(':earth_americas: Sunderland Carbon Intensity')
-# st.markdown("""
-# ### Introduction to the Sunderland Carbon Intensity Dashboard
+# # # Dashboard Title and Introduction
+# # st.title(':earth_americas: Sunderland Carbon Intensity')
+# # st.markdown("""
+# # ### Introduction to the Sunderland Carbon Intensity Dashboard
 
-# Welcome to the Sunderland Carbon Intensity Dashboard! This interactive platform provides a comprehensive overview of carbon emissions in Sunderland, offering real-time and historical insights into the city's carbon intensity levels.
+# # Welcome to the Sunderland Carbon Intensity Dashboard! This interactive platform provides a comprehensive overview of carbon emissions in Sunderland, offering real-time and historical insights into the city's carbon intensity levels.
+
+# # Carbon intensity refers to the amount of carbon dioxide (CO₂) emissions produced per unit of energy consumed. It is a crucial metric for understanding the environmental impact of energy use and identifying opportunities for reducing greenhouse gas emissions.
+
+# # **Key Features of the Dashboard:**
+# # - **Real-Time Monitoring:** View up-to-date information on carbon intensity levels across Sunderland.
+# # - **Historical Data Analysis:** Explore past trends in carbon intensity.
+# # - **Interactive Visualizations:** Utilize dynamic charts, graphs, and maps to visualize data effectively.
+# # - **Impact Assessment:** Understand how different energy sources and activities contribute to Sunderland's overall carbon footprint.
+
+# # By tracking carbon intensity, Sunderland can promote cleaner energy, enhance sustainability planning, and engage the community in reducing emissions.
+
+# # Explore the dashboard today to see how you can contribute to a sustainable future!
+# # """)
+
+# # # Add space between sections
+# # st.write('')
+
+# # # Year selection slider
+# # min_value, max_value = gdp_df['Year'].min(), gdp_df['Year'].max()
+# # from_year, to_year = st.slider('Select the year range:', min_value=min_value, max_value=max_value, value=[min_value, max_value])
+
+# # # Country selection
+# # countries = gdp_df['Country Code'].unique()
+# # selected_countries = st.multiselect('Select countries to view:', countries, ['DEU', 'FRA', 'GBR', 'BRA', 'MEX', 'JPN'])
+
+# # # Warn if no country is selected
+# # if not selected_countries:
+# #     st.warning("Please select at least one country to view the data.")
+
+# # # Filter the data based on user input
+# # filtered_gdp_df = gdp_df[
+# #     (gdp_df['Country Code'].isin(selected_countries)) &
+# #     (gdp_df['Year'] >= from_year) &
+# #     (gdp_df['Year'] <= to_year)
+# # ]
+
+# # # GDP Line Chart
+# # st.header('GDP over time')
+# # st.line_chart(filtered_gdp_df, x='Year', y='GDP', color='Country Code')
 
-# Carbon intensity refers to the amount of carbon dioxide (CO₂) emissions produced per unit of energy consumed. It is a crucial metric for understanding the environmental impact of energy use and identifying opportunities for reducing greenhouse gas emissions.
+# # # Display GDP Metrics
+# # st.header(f'GDP in {to_year}')
 
-# **Key Features of the Dashboard:**
-# - **Real-Time Monitoring:** View up-to-date information on carbon intensity levels across Sunderland.
-# - **Historical Data Analysis:** Explore past trends in carbon intensity.
-# - **Interactive Visualizations:** Utilize dynamic charts, graphs, and maps to visualize data effectively.
-# - **Impact Assessment:** Understand how different energy sources and activities contribute to Sunderland's overall carbon footprint.
-
-# By tracking carbon intensity, Sunderland can promote cleaner energy, enhance sustainability planning, and engage the community in reducing emissions.
-
-# Explore the dashboard today to see how you can contribute to a sustainable future!
-# """)
-
-# # Add space between sections
-# st.write('')
-
-# # Year selection slider
-# min_value, max_value = gdp_df['Year'].min(), gdp_df['Year'].max()
-# from_year, to_year = st.slider('Select the year range:', min_value=min_value, max_value=max_value, value=[min_value, max_value])
-
-# # Country selection
-# countries = gdp_df['Country Code'].unique()
-# selected_countries = st.multiselect('Select countries to view:', countries, ['DEU', 'FRA', 'GBR', 'BRA', 'MEX', 'JPN'])
-
-# # Warn if no country is selected
-# if not selected_countries:
-#     st.warning("Please select at least one country to view the data.")
-
-# # Filter the data based on user input
-# filtered_gdp_df = gdp_df[
-#     (gdp_df['Country Code'].isin(selected_countries)) &
-#     (gdp_df['Year'] >= from_year) &
-#     (gdp_df['Year'] <= to_year)
-# ]
-
-# # GDP Line Chart
-# st.header('GDP over time')
-# st.line_chart(filtered_gdp_df, x='Year', y='GDP', color='Country Code')
+# # # Display metrics for each selected country
+# # cols = st.columns(4)
+# # for i, country in enumerate(selected_countries):
+# #     col = cols[i % len(cols)]
+# #     with col:
+# #         first_gdp = gdp_df[(gdp_df['Country Code'] == country) & (gdp_df['Year'] == from_year)]['GDP'].iat[0] / 1e9
+# #         last_gdp = gdp_df[(gdp_df['Country Code'] == country) & (gdp_df['Year'] == to_year)]['GDP'].iat[0] / 1e9
 
-# # Display GDP Metrics
-# st.header(f'GDP in {to_year}')
+# #         if math.isnan(first_gdp):
+# #             growth, delta_color = 'n/a', 'off'
+# #         else:
+# #             growth = f'{last_gdp / first_gdp:,.2f}x'
+# #             delta_color = 'normal'
 
-# # Display metrics for each selected country
-# cols = st.columns(4)
-# for i, country in enumerate(selected_countries):
-#     col = cols[i % len(cols)]
-#     with col:
-#         first_gdp = gdp_df[(gdp_df['Country Code'] == country) & (gdp_df['Year'] == from_year)]['GDP'].iat[0] / 1e9
-#         last_gdp = gdp_df[(gdp_df['Country Code'] == country) & (gdp_df['Year'] == to_year)]['GDP'].iat[0] / 1e9
+# #         st.metric(label=f'{country} GDP', value=f'{last_gdp:,.0f}B', delta=growth, delta_color=delta_color)
 
-#         if math.isnan(first_gdp):
-#             growth, delta_color = 'n/a', 'off'
-#         else:
-#             growth = f'{last_gdp / first_gdp:,.2f}x'
-#             delta_color = 'normal'
 
-#         st.metric(label=f'{country} GDP', value=f'{last_gdp:,.0f}B', delta=growth, delta_color=delta_color)
 
 
+# # import streamlit as st
+# # import pandas as pd
+# # import math
+# # from pathlib import Path
 
+# # # Set the title and favicon that appear in the Browser's tab bar.
+# # st.set_page_config(
+# #     page_title='Sunderland Carbon Intensity',
+# #     page_icon=':earth_americas:', # This is an emoji shortcode. Could be a URL too.
+# # )
 
-# import streamlit as st
-# import pandas as pd
-# import math
-# from pathlib import Path
+# # # -----------------------------------------------------------------------------
+# # # Declare some useful functions.
 
-# # Set the title and favicon that appear in the Browser's tab bar.
-# st.set_page_config(
-#     page_title='Sunderland Carbon Intensity',
-#     page_icon=':earth_americas:', # This is an emoji shortcode. Could be a URL too.
-# )
+# # @st.cache_data
+# # def get_gdp_data():
+# #     """Grab GDP data from a CSV file.
 
-# # -----------------------------------------------------------------------------
-# # Declare some useful functions.
+# #     This uses caching to avoid having to read the file every time. If we were
+# #     reading from an HTTP endpoint instead of a file, it's a good idea to set
+# #     a maximum age to the cache with the TTL argument: @st.cache_data(ttl='1d')
+# #     """
 
-# @st.cache_data
-# def get_gdp_data():
-#     """Grab GDP data from a CSV file.
+# #     # Instead of a CSV on disk, you could read from an HTTP endpoint here too.
+# #     DATA_FILENAME = Path(__file__).parent/'data/gdp_data.csv'
+# #     raw_gdp_df = pd.read_csv(DATA_FILENAME)
 
-#     This uses caching to avoid having to read the file every time. If we were
-#     reading from an HTTP endpoint instead of a file, it's a good idea to set
-#     a maximum age to the cache with the TTL argument: @st.cache_data(ttl='1d')
-#     """
+# #     MIN_YEAR = 1960
+# #     MAX_YEAR = 2022
 
-#     # Instead of a CSV on disk, you could read from an HTTP endpoint here too.
-#     DATA_FILENAME = Path(__file__).parent/'data/gdp_data.csv'
-#     raw_gdp_df = pd.read_csv(DATA_FILENAME)
+# #     # The data above has columns like:
+# #     # - Country Name
+# #     # - Country Code
+# #     # - [Stuff I don't care about]
+# #     # - GDP for 1960
+# #     # - GDP for 1961
+# #     # - GDP for 1962
+# #     # - ...
+# #     # - GDP for 2022
+# #     #
+# #     # ...but I want this instead:
+# #     # - Country Name
+# #     # - Country Code
+# #     # - Year
+# #     # - GDP
+# #     #
+# #     # So let's pivot all those year-columns into two: Year and GDP
+# #     gdp_df = raw_gdp_df.melt(
+# #         ['Country Code'],
+# #         [str(x) for x in range(MIN_YEAR, MAX_YEAR + 1)],
+# #         'Year',
+# #         'GDP',
+# #     )
 
-#     MIN_YEAR = 1960
-#     MAX_YEAR = 2022
+# #     # Convert years from string to integers
+# #     gdp_df['Year'] = pd.to_numeric(gdp_df['Year'])
 
-#     # The data above has columns like:
-#     # - Country Name
-#     # - Country Code
-#     # - [Stuff I don't care about]
-#     # - GDP for 1960
-#     # - GDP for 1961
-#     # - GDP for 1962
-#     # - ...
-#     # - GDP for 2022
-#     #
-#     # ...but I want this instead:
-#     # - Country Name
-#     # - Country Code
-#     # - Year
-#     # - GDP
-#     #
-#     # So let's pivot all those year-columns into two: Year and GDP
-#     gdp_df = raw_gdp_df.melt(
-#         ['Country Code'],
-#         [str(x) for x in range(MIN_YEAR, MAX_YEAR + 1)],
-#         'Year',
-#         'GDP',
-#     )
+# #     return gdp_df
 
-#     # Convert years from string to integers
-#     gdp_df['Year'] = pd.to_numeric(gdp_df['Year'])
+# # gdp_df = get_gdp_data()
 
-#     return gdp_df
+# # # -----------------------------------------------------------------------------
+# # # Draw the actual page
 
-# gdp_df = get_gdp_data()
+# # # Set the title that appears at the top of the page.
+# # '''
+# # # :earth_americas: Sunderland Carbon Intensity
 
-# # -----------------------------------------------------------------------------
-# # Draw the actual page
+# # Introduction to the Sunderland Carbon Intensity Dashboard
 
-# # Set the title that appears at the top of the page.
-# '''
-# # :earth_americas: Sunderland Carbon Intensity
+# # Welcome to the Sunderland Carbon Intensity Dashboard! This interactive platform is designed to provide a comprehensive overview of carbon emissions in Sunderland, offering real-time and historical insights into the city's carbon intensity levels.
 
-# Introduction to the Sunderland Carbon Intensity Dashboard
+# # Carbon intensity refers to the amount of carbon dioxide (CO₂) emissions produced per unit of energy consumed. It is a crucial metric for understanding the environmental impact of energy use and helps identify opportunities for reducing greenhouse gas emissions. The Sunderland Carbon Intensity Dashboard brings together data from various sources to monitor the city’s carbon footprint, track changes over time, and support decision-making for a more sustainable future.
+# # Key Features of the Dashboard
 
-# Welcome to the Sunderland Carbon Intensity Dashboard! This interactive platform is designed to provide a comprehensive overview of carbon emissions in Sunderland, offering real-time and historical insights into the city's carbon intensity levels.
+# # Real-Time Monitoring: View up-to-date information on carbon intensity levels across Sunderland, helping residents, businesses, and policymakers understand current emissions and take timely action.
 
-# Carbon intensity refers to the amount of carbon dioxide (CO₂) emissions produced per unit of energy consumed. It is a crucial metric for understanding the environmental impact of energy use and helps identify opportunities for reducing greenhouse gas emissions. The Sunderland Carbon Intensity Dashboard brings together data from various sources to monitor the city’s carbon footprint, track changes over time, and support decision-making for a more sustainable future.
-# Key Features of the Dashboard
+# # Historical Data Analysis: Explore past trends in carbon intensity, analyze patterns over different time frames, and identify key periods of high or low emissions.
 
-# Real-Time Monitoring: View up-to-date information on carbon intensity levels across Sunderland, helping residents, businesses, and policymakers understand current emissions and take timely action.
+# # Interactive Visualizations: Utilize a range of dynamic charts, graphs, and maps to visualize data effectively, making complex information easy to understand and actionable.
 
-# Historical Data Analysis: Explore past trends in carbon intensity, analyze patterns over different time frames, and identify key periods of high or low emissions.
+# # Impact Assessment: Understand how different energy sources and activities contribute to Sunderland's overall carbon footprint, aiding in the development of targeted strategies for emissions reduction.
 
-# Interactive Visualizations: Utilize a range of dynamic charts, graphs, and maps to visualize data effectively, making complex information easy to understand and actionable.
+# # Why Monitor Carbon Intensity?
 
-# Impact Assessment: Understand how different energy sources and activities contribute to Sunderland's overall carbon footprint, aiding in the development of targeted strategies for emissions reduction.
+# # Tracking carbon intensity is essential for achieving local and national climate goals. By monitoring this metric, Sunderland can:
 
-# Why Monitor Carbon Intensity?
+# # Promote Cleaner Energy: Encourage the use of renewable energy sources and reduce reliance on fossil fuels.
 
-# Tracking carbon intensity is essential for achieving local and national climate goals. By monitoring this metric, Sunderland can:
+# # Enhance Sustainability Planning: Support the city’s efforts to become more sustainable by providing data-driven insights for urban planning, transport, and energy policies.
 
-# Promote Cleaner Energy: Encourage the use of renewable energy sources and reduce reliance on fossil fuels.
+# # Engage the Community: Raise awareness among residents and businesses about their carbon footprint and inspire collective action towards reducing emissions.
 
-# Enhance Sustainability Planning: Support the city’s efforts to become more sustainable by providing data-driven insights for urban planning, transport, and energy policies.
+# # Conclusion
 
-# Engage the Community: Raise awareness among residents and businesses about their carbon footprint and inspire collective action towards reducing emissions.
+# # The Sunderland Carbon Intensity Dashboard is a valuable tool for anyone interested in understanding and reducing the city’s carbon footprint. Whether you are a resident, business owner, or policymaker, this dashboard provides the data and insights needed to make informed decisions for a greener Sunderland. Explore the dashboard today to see how you can contribute to a sustainable future!
+# # '''
 
-# Conclusion
+# # # Add some spacing
+# # ''
+# # ''
 
-# The Sunderland Carbon Intensity Dashboard is a valuable tool for anyone interested in understanding and reducing the city’s carbon footprint. Whether you are a resident, business owner, or policymaker, this dashboard provides the data and insights needed to make informed decisions for a greener Sunderland. Explore the dashboard today to see how you can contribute to a sustainable future!
-# '''
+# # min_value = gdp_df['Year'].min()
+# # max_value = gdp_df['Year'].max()
 
-# # Add some spacing
-# ''
-# ''
+# # from_year, to_year = st.slider(
+# #     'Which years are you interested in?',
+# #     min_value=min_value,
+# #     max_value=max_value,
+# #     value=[min_value, max_value])
 
-# min_value = gdp_df['Year'].min()
-# max_value = gdp_df['Year'].max()
+# # countries = gdp_df['Country Code'].unique()
 
-# from_year, to_year = st.slider(
-#     'Which years are you interested in?',
-#     min_value=min_value,
-#     max_value=max_value,
-#     value=[min_value, max_value])
+# # if not len(countries):
+# #     st.warning("Select at least one country")
 
-# countries = gdp_df['Country Code'].unique()
+# # selected_countries = st.multiselect(
+# #     'Which countries would you like to view?',
+# #     countries,
+# #     ['DEU', 'FRA', 'GBR', 'BRA', 'MEX', 'JPN'])
 
-# if not len(countries):
-#     st.warning("Select at least one country")
+# # ''
+# # ''
+# # ''
 
-# selected_countries = st.multiselect(
-#     'Which countries would you like to view?',
-#     countries,
-#     ['DEU', 'FRA', 'GBR', 'BRA', 'MEX', 'JPN'])
+# # # Filter the data
+# # filtered_gdp_df = gdp_df[
+# #     (gdp_df['Country Code'].isin(selected_countries))
+# #     & (gdp_df['Year'] <= to_year)
+# #     & (from_year <= gdp_df['Year'])
+# # ]
 
-# ''
-# ''
-# ''
+# # st.header('GDP over time', divider='gray')
 
-# # Filter the data
-# filtered_gdp_df = gdp_df[
-#     (gdp_df['Country Code'].isin(selected_countries))
-#     & (gdp_df['Year'] <= to_year)
-#     & (from_year <= gdp_df['Year'])
-# ]
+# # ''
 
-# st.header('GDP over time', divider='gray')
+# # st.line_chart(
+# #     filtered_gdp_df,
+# #     x='Year',
+# #     y='GDP',
+# #     color='Country Code',
+# # )
 
-# ''
+# # ''
+# # ''
 
-# st.line_chart(
-#     filtered_gdp_df,
-#     x='Year',
-#     y='GDP',
-#     color='Country Code',
-# )
 
-# ''
-# ''
+# # first_year = gdp_df[gdp_df['Year'] == from_year]
+# # last_year = gdp_df[gdp_df['Year'] == to_year]
 
+# # st.header(f'GDP in {to_year}', divider='gray')
 
-# first_year = gdp_df[gdp_df['Year'] == from_year]
-# last_year = gdp_df[gdp_df['Year'] == to_year]
+# # ''
 
-# st.header(f'GDP in {to_year}', divider='gray')
+# # cols = st.columns(4)
 
-# ''
+# # for i, country in enumerate(selected_countries):
+# #     col = cols[i % len(cols)]
 
-# cols = st.columns(4)
+# #     with col:
+# #         first_gdp = first_year[first_year['Country Code'] == country]['GDP'].iat[0] / 1000000000
+# #         last_gdp = last_year[last_year['Country Code'] == country]['GDP'].iat[0] / 1000000000
 
-# for i, country in enumerate(selected_countries):
-#     col = cols[i % len(cols)]
+# #         if math.isnan(first_gdp):
+# #             growth = 'n/a'
+# #             delta_color = 'off'
+# #         else:
+# #             growth = f'{last_gdp / first_gdp:,.2f}x'
+# #             delta_color = 'normal'
 
-#     with col:
-#         first_gdp = first_year[first_year['Country Code'] == country]['GDP'].iat[0] / 1000000000
-#         last_gdp = last_year[last_year['Country Code'] == country]['GDP'].iat[0] / 1000000000
-
-#         if math.isnan(first_gdp):
-#             growth = 'n/a'
-#             delta_color = 'off'
-#         else:
-#             growth = f'{last_gdp / first_gdp:,.2f}x'
-#             delta_color = 'normal'
-
-#         st.metric(
-#             label=f'{country} GDP',
-#             value=f'{last_gdp:,.0f}B',
-#             delta=growth,
-#             delta_color=delta_color
-#         )
+# #         st.metric(
+# #             label=f'{country} GDP',
+# #             value=f'{last_gdp:,.0f}B',
+# #             delta=growth,
+# #             delta_color=delta_color
+# #         )
