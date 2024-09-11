@@ -32,9 +32,9 @@ st.markdown("""
 ### Introduction to the Sunderland Carbon Intensity Dashboard
 
 #### Dr Basel Barakat
-#### University of Sunderland
-#### School of Computer Science and  Engineering
-#### Faculty of Business and Technology
+##### University of Sunderland
+##### School of Computer Science and  Engineering
+##### Faculty of Business and Technology
 Welcome to the Sunderland Carbon Intensity Dashboard! This interactive platform provides a comprehensive overview of carbon emissions in Sunderland, offering real-time and historical insights into the city's carbon intensity levels.
 
 **Carbon intensity** refers to the amount of carbon dioxide (CO₂) emissions produced per unit of energy consumed. It is a crucial metric for understanding the environmental impact of energy use and identifying opportunities for reducing greenhouse gas emissions.
