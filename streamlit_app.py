@@ -27,6 +27,7 @@ carbon_df = get_carbon_data()
 
 # Dashboard Title and Introduction
 st.title(':earth_americas: Sunderland Carbon Intensity')
+st.title('Dr Basel Barakat')
 st.markdown("""
 ### Introduction to the Sunderland Carbon Intensity Dashboard
 
