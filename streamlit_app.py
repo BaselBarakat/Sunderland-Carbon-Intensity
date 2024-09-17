@@ -23,9 +23,8 @@ def get_carbon_data():
     #raw_carbon_df = raw_carbon_df.drop('Unnammed: 0', axis=1)
     return raw_carbon_df
 
-# Load the CSV and get the last available date
-def get_last_timestamp_from_csv(csv_file_path, timestamp_column):
-    df = pd.read_csv(csv_file_path)
+# Function to get the last available timestamp from the DataFrame
+def get_last_timestamp_from_df(df, timestamp_column):
     # Ensure the timestamp column is in datetime format
     df[timestamp_column] = pd.to_datetime(df[timestamp_column])
     # Get the last timestamp
@@ -49,9 +48,9 @@ def get_current_uk_time_rounded():
     return rounded_time
 
 # Main function to generate date range
-def generate_date_range(csv_file_path, timestamp_column):
-    # Get the last timestamp from CSV
-    start_date = get_last_timestamp_from_csv(csv_file_path, timestamp_column)
+def generate_date_range_from_df(df, timestamp_column):
+    # Get the last timestamp from DataFrame
+    start_date = get_last_timestamp_from_df(df, timestamp_column)
     
     # Get the current UK time rounded to the nearest half hour
     end_date = get_current_uk_time_rounded()
@@ -62,13 +61,20 @@ def generate_date_range(csv_file_path, timestamp_column):
     return date_range
 
 
+
 # # Load the Carbon Intensity data
 carbon_df = get_carbon_data()
 
-csv_file_path = 'carbon.csv'  # Replace with your CSV file path
-timestamp_column = 'to'  # Replace with your actual timestamp column name
-date_range = generate_date_range(csv_file_path, timestamp_column)
+
+timestamp_column = 'timestamp'  # Replace with your actual timestamp column name
+date_range = generate_date_range_from_df(carbon_df, timestamp_column)
 print(date_range)
+
+
+# csv_file_path = 'carbon.csv'  # Replace with your CSV file path
+# timestamp_column = 'to'  # Replace with your actual timestamp column name
+# date_range = generate_date_range(csv_file_path, timestamp_column)
+# print(date_range)
 
 
 skipped = []
