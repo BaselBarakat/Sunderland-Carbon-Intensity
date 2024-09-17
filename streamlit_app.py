@@ -1,6 +1,11 @@
 import streamlit as st
 import pandas as pd
 from pathlib import Path
+import requests
+from datetime import datetime, timedelta
+
+import pytz
+
 
 # Set the title and favicon for the browser tab
 st.set_page_config(page_title='Sunderland Carbon Intensity', page_icon=':earth_americas:')
@@ -18,10 +23,92 @@ def get_carbon_data():
     #raw_carbon_df = raw_carbon_df.drop('Unnammed: 0', axis=1)
     return raw_carbon_df
 
+# Load the CSV and get the last available date
+def get_last_timestamp_from_csv(csv_file_path, timestamp_column):
+    df = pd.read_csv(csv_file_path)
+    # Ensure the timestamp column is in datetime format
+    df[timestamp_column] = pd.to_datetime(df[timestamp_column])
+    # Get the last timestamp
+    last_timestamp = df[timestamp_column].max()
+    return last_timestamp
+
+# Get current UK time rounded to the nearest half hour
+def get_current_uk_time_rounded():
+    uk_timezone = pytz.timezone('Europe/London')
+    current_time = datetime.now(uk_timezone)
+    
+    # Round to the nearest half-hour
+    minutes = current_time.minute
+    if minutes < 15:
+        rounded_time = current_time.replace(minute=0, second=0, microsecond=0)
+    elif 15 <= minutes < 45:
+        rounded_time = current_time.replace(minute=30, second=0, microsecond=0)
+    else:
+        rounded_time = current_time.replace(minute=0, second=0, microsecond=0) + timedelta(hours=1)
+
+    return rounded_time
+
+# Main function to generate date range
+def generate_date_range(csv_file_path, timestamp_column):
+    # Get the last timestamp from CSV
+    start_date = get_last_timestamp_from_csv(csv_file_path, timestamp_column)
+    
+    # Get the current UK time rounded to the nearest half hour
+    end_date = get_current_uk_time_rounded()
+    
+    # Generate date range from start_date to end_date
+    date_range = [start_date + timedelta(days=i) for i in range((end_date - start_date).days + 1)]
+    
+    return date_range
+
+
 # # Load the Carbon Intensity data
 carbon_df = get_carbon_data()
 
+csv_file_path = 'carbon.csv'  # Replace with your CSV file path
+timestamp_column = 'to'  # Replace with your actual timestamp column name
+date_range = generate_date_range(csv_file_path, timestamp_column)
+print(date_range)
 
+
+skipped = []
+# Function to fetch data for a given date range
+def fetch_data(start, end):
+    headers = {'Accept': 'application/json'}
+    url = f'https://api.carbonintensity.org.uk/regional/intensity/{start.strftime("%Y-%m-%dT%H:%MZ")}/{end.strftime("%Y-%m-%dT%H:%MZ")}/postcode/me4'
+    response = requests.get(url, params={}, headers=headers)
+    return response.json()
+
+# Initialize an empty list to store records
+all_records = []
+
+# Loop through each date range and fetch data
+for i in range(len(date_range) - 1):
+    start = date_range[i]
+    end = date_range[i + 1]
+    data = fetch_data(start, end)
+    
+    try:
+        # Extract relevant data
+        entries = data['data']['data']
+    except:
+        print(start)
+        skipped.append(start)
+        continue
+    
+    for entry in entries:
+        record = {
+            'from': entry['from'],
+            'to': entry['to'],
+            'forecast': entry['intensity']['forecast'],
+            'index': entry['intensity']['index'],
+        }
+        for mix in entry['generationmix']:
+            record[mix['fuel']] = mix['perc']
+        all_records.append(record)
+
+# Convert list of records to DataFrame
+carbon_df = pd.DataFrame(all_records)
 # -----------------------------------------------------------------------------
 # Draw the page content
 
