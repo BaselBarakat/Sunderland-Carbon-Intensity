@@ -66,7 +66,7 @@ def generate_date_range_from_df(df, timestamp_column):
 carbon_df = get_carbon_data()
 
 
-timestamp_column = 'timestamp'  # Replace with your actual timestamp column name
+timestamp_column = 'to'  # Replace with your actual timestamp column name
 date_range = generate_date_range_from_df(carbon_df, timestamp_column)
 print(date_range)
 
