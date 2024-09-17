@@ -24,12 +24,12 @@ def get_carbon_data():
     return raw_carbon_df
 
 # Function to get the last available timestamp from the DataFrame
-def get_last_timestamp_from_df(df, timestamp_column):
+def get_first_timestamp_from_df(df, timestamp_column):
     # Ensure the timestamp column is in datetime format
     df[timestamp_column] = pd.to_datetime(df[timestamp_column])
-    # Get the last timestamp
-    last_timestamp = df[timestamp_column].max()
-    return last_timestamp
+    # Get the first timestamp
+    first_timestamp = df[timestamp_column].min()
+    return first_timestamp
 
 # Get current UK time rounded to the nearest half hour
 def get_current_uk_time_rounded():
@@ -50,7 +50,7 @@ def get_current_uk_time_rounded():
 # Main function to generate date range
 def generate_date_range_from_df(df, timestamp_column):
     # Get the last timestamp from DataFrame
-    start_date = get_last_timestamp_from_df(df, timestamp_column)
+    start_date = get_first_timestamp_from_df(df, timestamp_column)
     
     # Get the current UK time rounded to the nearest half hour
     end_date = get_current_uk_time_rounded()
