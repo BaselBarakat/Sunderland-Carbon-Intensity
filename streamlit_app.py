@@ -148,6 +148,8 @@ st.write('')
 
 # Ensure that the 'from' column is in UTC timezone
 carbon_df['from'] = pd.to_datetime(carbon_df['from'], utc=True)
+
+carbon_df.to_csv('data/carbon.csv')
 # Get the min and max date from the DataFrame
 min_date = carbon_df['from'].min()
 max_date = carbon_df['from'].max()
