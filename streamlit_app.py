@@ -15,7 +15,7 @@ def get_carbon_data():
     # Convert 'from' and 'to' columns to datetime format
     raw_carbon_df['from'] = pd.to_datetime(raw_carbon_df['from'])
     raw_carbon_df['to'] = pd.to_datetime(raw_carbon_df['to'])
-    raw_carbon_df = raw_carbon_df.drop('Unnammed: 0', axis=1)
+    #raw_carbon_df = raw_carbon_df.drop('Unnammed: 0', axis=1)
     return raw_carbon_df
 
 # # Load the Carbon Intensity data
