@@ -154,17 +154,6 @@ start_date = pd.to_datetime(selected_dates[0]).tz_convert('UTC')
 end_date = pd.to_datetime(selected_dates[1]).tz_convert('UTC')
 filtered_carbon_df = carbon_df[(carbon_df['from'] >= start_date) & (carbon_df['from'] <= end_date)]
 
-# Carbon Intensity Line Chart
-st.header('Carbon Intensity Over Time')
-st.line_chart(filtered_carbon_df, x='from', y='forecast')
-
-# Display summary statistics
-st.header('Carbon Intensity Statistics')
-st.write(filtered_carbon_df.describe())
-
-st.write(f"Data from {selected_dates[0].strftime('%Y-%m-%d %H:%M')} to {selected_dates[1].strftime('%Y-%m-%d %H:%M')}")
-
-
 
 # Load the Carbon Intensity data
 # carbon_df = get_carbon_data()
@@ -179,7 +168,7 @@ latest_forecast = float( latest_data['forecast'])
 latest_index = latest_data['index'] # categorize_intensity(latest_forecast)
 
 # Dashboard title and introduction
-st.title(':earth_americas: Sunderland Carbon Intensity Dashboard')
+st.title(':earth_africa: Sunderland Carbon Intensity Dashboard')
 
 # Show the latest carbon intensity in a clear, visual format
 st.header('Latest Carbon Intensity')
@@ -225,3 +214,14 @@ st.write(filtered_carbon_df)
 # Display summary statistics for filtered data
 st.header('Carbon Intensity Statistics')
 st.write(recent_df.describe())
+# Carbon Intensity Line Chart
+st.header('Carbon Intensity Over Time')
+st.line_chart(filtered_carbon_df, x='from', y='forecast')
+
+# Display summary statistics
+st.header('Carbon Intensity Statistics')
+st.write(filtered_carbon_df.describe())
+
+st.write(f"Data from {selected_dates[0].strftime('%Y-%m-%d %H:%M')} to {selected_dates[1].strftime('%Y-%m-%d %H:%M')}")
+
+
