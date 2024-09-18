@@ -138,6 +138,21 @@ st.markdown("""
 ###### School of Computer Science and Engineering
 """)
 
+# Filter data based on selected date range
+carbon_df['from'] = pd.to_datetime(carbon_df['from'], utc=True)
+min_date = carbon_df['from'].min()
+max_date = carbon_df['from'].max()
+
+# Streamlit slider for date range selection
+selected_dates = st.slider('Select the date range:', 
+                           min_value=min_date.to_pydatetime(), 
+                           max_value=max_date.to_pydatetime(), 
+                           value=(min_date.to_pydatetime(), max_date.to_pydatetime()))
+
+# Filter DataFrame based on selected date range
+start_date = pd.to_datetime(selected_dates[0]).tz_convert('UTC')
+end_date = pd.to_datetime(selected_dates[1]).tz_convert('UTC')
+filtered_carbon_df = carbon_df[(carbon_df['from'] >= start_date) & (carbon_df['from'] <= end_date)]
 
 # Carbon Intensity Line Chart
 st.header('Carbon Intensity Over Time')
@@ -202,21 +217,6 @@ st.line_chart(recent_df, x='from', y='forecast')
 
 
 
-# Filter data based on selected date range
-carbon_df['from'] = pd.to_datetime(carbon_df['from'], utc=True)
-min_date = carbon_df['from'].min()
-max_date = carbon_df['from'].max()
-
-# Streamlit slider for date range selection
-selected_dates = st.slider('Select the date range:', 
-                           min_value=min_date.to_pydatetime(), 
-                           max_value=max_date.to_pydatetime(), 
-                           value=(min_date.to_pydatetime(), max_date.to_pydatetime()))
-
-# Filter DataFrame based on selected date range
-start_date = pd.to_datetime(selected_dates[0]).tz_convert('UTC')
-end_date = pd.to_datetime(selected_dates[1]).tz_convert('UTC')
-filtered_carbon_df = carbon_df[(carbon_df['from'] >= start_date) & (carbon_df['from'] <= end_date)]
 
 # Display filtered data
 st.write(filtered_carbon_df)
