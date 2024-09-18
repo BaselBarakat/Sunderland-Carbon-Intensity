@@ -176,7 +176,7 @@ carbon_df = carbon_df.sort_values(by='from', ascending=False)
 
 # Get the latest data
 latest_data = carbon_df.iloc[0]
-latest_forecast = latest_data['index']
+latest_forecast = float( latest_data['forecast'])
 latest_index = latest_data['index'] # categorize_intensity(latest_forecast)
 
 # Dashboard title and introduction
