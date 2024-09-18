@@ -7,7 +7,7 @@ import requests
 from datetime import datetime, timedelta
 
 # Set the title and favicon for the browser tab
-st.set_page_config(page_title='Sunderland Carbon Intensity', page_icon=':earth_americas:')
+st.set_page_config(page_title='Sunderland Carbon Intensity', page_icon=':earth_africa:')
 
 # Function to load and process Carbon Intensity data
 @st.cache_data
@@ -71,6 +71,20 @@ def append_new_data_to_csv(new_data, filename):
     if not new_data.empty:
         new_data.to_csv(filename, mode='a', header=False, index=False)
 
+# Define intensity categories
+def categorize_intensity(forecast):
+    if forecast < 50:
+        return "Very Low"
+    elif 50 <= forecast < 100:
+        return "Low"
+    elif 100 <= forecast < 150:
+        return "Moderate"
+    elif 150 <= forecast < 200:
+        return "High"
+    else:
+        return "Very High"
+
+
 # Load the Carbon Intensity data
 carbon_df = get_carbon_data()
 
@@ -113,7 +127,7 @@ if start_date < end_date:
         append_new_data_to_csv(new_data_df, Path(__file__).parent / 'data/carbon.csv')
 
 # Dashboard content and visualizations
-st.title(':earth_americas: Sunderland Carbon Intensity')
+# st.title(':earth_americas: Sunderland Carbon Intensity')
 
 # Introduction text
 st.markdown("""
@@ -124,24 +138,6 @@ st.markdown("""
 ###### School of Computer Science and Engineering
 """)
 
-# Filter data based on selected date range
-carbon_df['from'] = pd.to_datetime(carbon_df['from'], utc=True)
-min_date = carbon_df['from'].min()
-max_date = carbon_df['from'].max()
-
-# Streamlit slider for date range selection
-selected_dates = st.slider('Select the date range:', 
-                           min_value=min_date.to_pydatetime(), 
-                           max_value=max_date.to_pydatetime(), 
-                           value=(min_date.to_pydatetime(), max_date.to_pydatetime()))
-
-# Filter DataFrame based on selected date range
-start_date = pd.to_datetime(selected_dates[0]).tz_convert('UTC')
-end_date = pd.to_datetime(selected_dates[1]).tz_convert('UTC')
-filtered_carbon_df = carbon_df[(carbon_df['from'] >= start_date) & (carbon_df['from'] <= end_date)]
-
-# Display filtered data
-st.write(filtered_carbon_df)
 
 # Carbon Intensity Line Chart
 st.header('Carbon Intensity Over Time')
@@ -154,18 +150,6 @@ st.write(filtered_carbon_df.describe())
 st.write(f"Data from {selected_dates[0].strftime('%Y-%m-%d %H:%M')} to {selected_dates[1].strftime('%Y-%m-%d %H:%M')}")
 
 
-# Define intensity categories
-def categorize_intensity(forecast):
-    if forecast < 50:
-        return "Very Low"
-    elif 50 <= forecast < 100:
-        return "Low"
-    elif 100 <= forecast < 150:
-        return "Moderate"
-    elif 150 <= forecast < 200:
-        return "High"
-    else:
-        return "Very High"
 
 # Load the Carbon Intensity data
 # carbon_df = get_carbon_data()
@@ -215,6 +199,28 @@ recent_df = carbon_df[carbon_df['from'] >= time_window]
 
 # Plot the line chart for recent carbon intensity
 st.line_chart(recent_df, x='from', y='forecast')
+
+
+
+# Filter data based on selected date range
+carbon_df['from'] = pd.to_datetime(carbon_df['from'], utc=True)
+min_date = carbon_df['from'].min()
+max_date = carbon_df['from'].max()
+
+# Streamlit slider for date range selection
+selected_dates = st.slider('Select the date range:', 
+                           min_value=min_date.to_pydatetime(), 
+                           max_value=max_date.to_pydatetime(), 
+                           value=(min_date.to_pydatetime(), max_date.to_pydatetime()))
+
+# Filter DataFrame based on selected date range
+start_date = pd.to_datetime(selected_dates[0]).tz_convert('UTC')
+end_date = pd.to_datetime(selected_dates[1]).tz_convert('UTC')
+filtered_carbon_df = carbon_df[(carbon_df['from'] >= start_date) & (carbon_df['from'] <= end_date)]
+
+# Display filtered data
+st.write(filtered_carbon_df)
+
 
 # Display summary statistics for filtered data
 st.header('Carbon Intensity Statistics')
