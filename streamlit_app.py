@@ -68,7 +68,7 @@ carbon_df = get_carbon_data()
 
 timestamp_column = 'to'  # Replace with your actual timestamp column name
 date_range = generate_date_range_from_df(carbon_df, timestamp_column)
-print(date_range)
+# print(date_range)
 
 
 # csv_file_path = 'carbon.csv'  # Replace with your CSV file path
@@ -98,7 +98,7 @@ for i in range(len(date_range) - 1):
         # Extract relevant data
         entries = data['data']['data']
     except:
-        print(start)
+        # print(start)
         skipped.append(start)
         continue
     
@@ -149,7 +149,7 @@ st.write('')
 # Ensure that the 'from' column is in UTC timezone
 carbon_df['from'] = pd.to_datetime(carbon_df['from'], utc=True)
 
-carbon_df.to_csv('/data/carbon.csv')
+# carbon_df.to_csv('/data/carbon.csv')
 # Get the min and max date from the DataFrame
 min_date = carbon_df['from'].min()
 max_date = carbon_df['from'].max()
