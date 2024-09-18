@@ -3,16 +3,8 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 import pytz
-from datetime import datetime
-
-
-
-import streamlit as st
-import pandas as pd
-from pathlib import Path
 import requests
 from datetime import datetime, timedelta
-import pytz
 
 # Set the title and favicon for the browser tab
 st.set_page_config(page_title='Sunderland Carbon Intensity', page_icon=':earth_americas:')
@@ -129,7 +121,7 @@ st.markdown("""
 #### Dr Basel Barakat
 ##### University of Sunderland
 ##### School of Computer Science and Engineering
-Welcome to the Sunderland Carbon Intensity Dashboard!
+## Welcome to the Sunderland Carbon Intensity Dashboard!
 """)
 
 # Filter data based on selected date range
@@ -176,7 +168,7 @@ def categorize_intensity(forecast):
         return "Very High"
 
 # Load the Carbon Intensity data
-carbon_df = get_carbon_data()
+# carbon_df = get_carbon_data()
 
 # Ensure 'from' column is in UTC and sort by time
 carbon_df['from'] = pd.to_datetime(carbon_df['from'], utc=True)
