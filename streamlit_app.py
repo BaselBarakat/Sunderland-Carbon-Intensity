@@ -117,11 +117,11 @@ st.title(':earth_americas: Sunderland Carbon Intensity')
 
 # Introduction text
 st.markdown("""
-### Introduction to the Sunderland Carbon Intensity Dashboard
-#### Dr Basel Barakat
-##### University of Sunderland
-##### School of Computer Science and Engineering
 ## Welcome to the Sunderland Carbon Intensity Dashboard!
+
+###### Dr Basel Barakat
+###### University of Sunderland
+###### School of Computer Science and Engineering
 """)
 
 # Filter data based on selected date range
@@ -190,11 +190,11 @@ st.metric("Carbon Intensity", f"{latest_forecast} gCO₂/kWh", f"Status: {latest
 
 # Map status to colors for visual appeal
 color_map = {
-    "Very Low": "green",
-    "Low": "lightgreen",
-    "Moderate": "orange",
-    "High": "red",
-    "Very High": "darkred"
+    "very low": "green",
+    "low": "lightgreen",
+    "moderate": "orange",
+    "high": "red",
+    "very high": "darkred"
 }
 # st.markdown(f"### Intensity Status: :{color_map[latest_index]}[{latest_index}]:")
 # Use HTML and inline styles for colored text
