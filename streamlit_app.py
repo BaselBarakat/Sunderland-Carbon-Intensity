@@ -143,7 +143,11 @@ carbon_df['from'] = pd.to_datetime(carbon_df['from'], utc=True)
 min_date = carbon_df['from'].min()
 max_date = carbon_df['from'].max()
 
-
+# Streamlit slider for date range selection
+selected_dates = st.slider('Select the date range:', 
+                           min_value=min_date.to_pydatetime(), 
+                           max_value=max_date.to_pydatetime(), 
+                           value=(min_date.to_pydatetime(), max_date.to_pydatetime()))
 
 # Filter DataFrame based on selected date range
 start_date = pd.to_datetime(selected_dates[0]).tz_convert('UTC')
@@ -201,11 +205,7 @@ recent_df = carbon_df[carbon_df['from'] >= time_window]
 st.line_chart(recent_df, x='from', y='forecast')
 
 
-# Streamlit slider for date range selection
-selected_dates = st.slider('Select the date range:', 
-                           min_value=min_date.to_pydatetime(), 
-                           max_value=max_date.to_pydatetime(), 
-                           value=(min_date.to_pydatetime(), max_date.to_pydatetime()))
+
 
 # Display filtered data
 st.write(filtered_carbon_df)
