@@ -196,7 +196,9 @@ color_map = {
     "High": "red",
     "Very High": "darkred"
 }
-st.markdown(f"### Intensity Status: :{color_map[latest_index]}[{latest_index}]:")
+# st.markdown(f"### Intensity Status: :{color_map[latest_index]}[{latest_index}]:")
+# Use HTML and inline styles for colored text
+st.markdown(f'<h3>Intensity Status: <span style="color:{color_map[latest_index]};">{latest_index}</span></h3>', unsafe_allow_html=True)
 
 # Display a progress bar to visually indicate the intensity category
 st.progress(int((latest_forecast / 250) * 100))  # Assuming 250 is the upper limit for "Very High"
