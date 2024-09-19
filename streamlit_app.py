@@ -61,6 +61,19 @@ def fetch_data(start, end):
     url = f'https://api.carbonintensity.org.uk/regional/intensity/{start.strftime("%Y-%m-%dT%H:%MZ")}/{end.strftime("%Y-%m-%dT%H:%MZ")}/postcode/me4'
     response = requests.get(url, headers=headers)
     return response.json()
+# Main function to generate date range for new data fetching
+def generate_date_range_for_fetching(df, timestamp_column):
+    last_saved_timestamp = get_last_timestamp_from_df(df, timestamp_column)
+    
+    if last_saved_timestamp is None:
+        start_date = datetime(2021, 1, 1, tzinfo=pytz.UTC)  # Default start date if no data is available
+    else:
+        start_date = last_saved_timestamp + timedelta(minutes=30)  # Start fetching from the next time slot
+
+    end_date = get_current_uk_time_rounded()
+    
+    return start_date, end_date
+
 # Load the Carbon Intensity data
 carbon_df = get_carbon_data()
 # Determine the date range for fetching new data
@@ -219,18 +232,7 @@ st.write(filtered_carbon_df.describe())
 
 #     return rounded_time
 
-# # Main function to generate date range for new data fetching
-# def generate_date_range_for_fetching(df, timestamp_column):
-#     last_saved_timestamp = get_last_timestamp_from_df(df, timestamp_column)
-    
-#     if last_saved_timestamp is None:
-#         start_date = datetime(2021, 1, 1, tzinfo=pytz.UTC)  # Default start date if no data is available
-#     else:
-#         start_date = last_saved_timestamp + timedelta(minutes=30)  # Start fetching from the next time slot
 
-#     end_date = get_current_uk_time_rounded()
-    
-#     return start_date, end_date
 
 
 
