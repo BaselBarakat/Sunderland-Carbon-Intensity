@@ -58,8 +58,44 @@ def categorize_intensity(forecast):
 
 # Load the Carbon Intensity data
 carbon_df = get_carbon_data()
+# Determine the date range for fetching new data
+start_date, end_date = generate_date_range_for_fetching(carbon_df, 'to')
 
-# Ensure 'from' column is in UTC and sort by time
+# Fetch new data only if there's a gap between the last available timestamp and the current time
+if start_date < end_date:
+    all_records = []
+    current_start = start_date
+    while current_start < end_date:
+        current_end = min(current_start + timedelta(days=1), end_date)  # Fetch data day by day
+        data = fetch_data(current_start, current_end)
+        try:
+            entries = data['data']['data']
+        except:
+            continue
+
+        for entry in entries:
+            record = {
+                'from': entry['from'],
+                'to': entry['to'],
+                'forecast': entry['intensity']['forecast'],
+                'index': entry['intensity']['index'],
+            }
+            for mix in entry['generationmix']:
+                record[mix['fuel']] = mix['perc']
+            all_records.append(record)
+
+        current_start += timedelta(days=1)
+
+    # Convert list of records to DataFrame
+    if all_records:
+        new_data_df = pd.DataFrame(all_records)
+        new_data_df['from'] = pd.to_datetime(new_data_df['from'], utc=True)
+        new_data_df['to'] = pd.to_datetime(new_data_df['to'], utc=True)
+
+        # Append new data to the existing DataFrame and CSV
+        carbon_df = pd.concat([carbon_df, new_data_df], ignore_index=True)
+        append_new_data_to_csv(new_data_df, Path(__file__).parent / 'data/carbon.csv')
+Ensure 'from' column is in UTC and sort by time
 carbon_df['from'] = pd.to_datetime(carbon_df['from'], utc=True)
 carbon_df = carbon_df.sort_values(by='from', ascending=False)
 
