@@ -55,7 +55,12 @@ def categorize_intensity(forecast):
         return "High"
     else:
         return "Very High"
-
+# Fetch data from the Carbon Intensity API
+def fetch_data(start, end):
+    headers = {'Accept': 'application/json'}
+    url = f'https://api.carbonintensity.org.uk/regional/intensity/{start.strftime("%Y-%m-%dT%H:%MZ")}/{end.strftime("%Y-%m-%dT%H:%MZ")}/postcode/me4'
+    response = requests.get(url, headers=headers)
+    return response.json()
 # Load the Carbon Intensity data
 carbon_df = get_carbon_data()
 # Determine the date range for fetching new data
@@ -95,7 +100,7 @@ if start_date < end_date:
         # Append new data to the existing DataFrame and CSV
         carbon_df = pd.concat([carbon_df, new_data_df], ignore_index=True)
         append_new_data_to_csv(new_data_df, Path(__file__).parent / 'data/carbon.csv')
-Ensure 'from' column is in UTC and sort by time
+# Ensure 'from' column is in UTC and sort by time
 carbon_df['from'] = pd.to_datetime(carbon_df['from'], utc=True)
 carbon_df = carbon_df.sort_values(by='from', ascending=False)
 
@@ -227,12 +232,7 @@ st.write(filtered_carbon_df.describe())
     
 #     return start_date, end_date
 
-# # Fetch data from the Carbon Intensity API
-# def fetch_data(start, end):
-#     headers = {'Accept': 'application/json'}
-#     url = f'https://api.carbonintensity.org.uk/regional/intensity/{start.strftime("%Y-%m-%dT%H:%MZ")}/{end.strftime("%Y-%m-%dT%H:%MZ")}/postcode/me4'
-#     response = requests.get(url, headers=headers)
-#     return response.json()
+
 
 # # Append new data to the CSV file
 # def append_new_data_to_csv(new_data, filename):
