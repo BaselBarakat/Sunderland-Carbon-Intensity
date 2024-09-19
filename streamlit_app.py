@@ -118,7 +118,7 @@ if start_date < end_date:
 
         # Append new data to the existing DataFrame and CSV
         carbon_df = pd.concat([carbon_df, new_data_df], ignore_index=True)
-        append_new_data_to_csv(new_data_df, Path(__file__).parent / '/data/carbon.csv')
+        append_new_data_to_csv(new_data_df, Path(__file__).parent / 'data/carbon.csv')
 # Ensure 'from' column is in UTC and sort by time
 carbon_df['from'] = pd.to_datetime(carbon_df['from'], utc=True)
 carbon_df = carbon_df.sort_values(by='from', ascending=False)
