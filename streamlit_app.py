@@ -133,6 +133,11 @@ if start_date < end_date:
 carbon_df['from'] = pd.to_datetime(carbon_df['from'], utc=True)
 carbon_df = carbon_df.sort_values(by='from', ascending=False)
 
+try: 
+          carbon_df = carbon_df.drop('Unnammed:0', axis=1)
+except:
+            print(carbon_df.columns)
+
 # Get the latest data
 latest_data = carbon_df.iloc[0]
 latest_forecast = float(latest_data['forecast'])
