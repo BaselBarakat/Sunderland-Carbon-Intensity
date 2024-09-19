@@ -19,9 +19,9 @@ def get_carbon_data():
         raw_carbon_df = pd.DataFrame(columns=['from', 'to', 'forecast', 'index'])  # Empty DataFrame structure
     
     try: 
-          carbon_df = carbon_df.drop('Unnammed:0', axis=1)
+          raw_carbon_df = raw_carbon_df.drop('Unnammed:0', axis=1)
     except:
-            print(carbon_df.columns)
+            print(raw_carbon_df.columns)
     return raw_carbon_df
 
 # Function to get the last available timestamp from the DataFrame
