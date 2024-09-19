@@ -17,6 +17,11 @@ def get_carbon_data():
         raw_carbon_df['to'] = pd.to_datetime(raw_carbon_df['to'], utc=True)
     else:
         raw_carbon_df = pd.DataFrame(columns=['from', 'to', 'forecast', 'index'])  # Empty DataFrame structure
+    
+    try: 
+          carbon_df = carbon_df.drop('Unnammed:0', axis=1)
+    except:
+            print(carbon_df.columns)
     return raw_carbon_df
 
 # Function to get the last available timestamp from the DataFrame
