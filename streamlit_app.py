@@ -121,7 +121,7 @@ if start_date < end_date:
         try: 
           carbon_df = carbon_df.drop('Unnammed:0', axis=1)
         except:
-            print(carbon_df.columns
+            print(carbon_df.columns)
                   
         append_new_data_to_csv(new_data_df, Path(__file__).parent / 'data/carbon.csv')
 # Ensure 'from' column is in UTC and sort by time
