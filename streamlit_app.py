@@ -3,7 +3,7 @@ import pandas as pd
 from pathlib import Path
 import pytz
 from datetime import datetime, timedelta
-
+import requests
 # Set the title and favicon for the browser tab
 st.set_page_config(page_title='Sunderland Carbon Intensity', page_icon=':earth_africa:')
 
