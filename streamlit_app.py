@@ -74,6 +74,12 @@ def generate_date_range_for_fetching(df, timestamp_column):
     
     return start_date, end_date
 
+# Append new data to the CSV file
+def append_new_data_to_csv(new_data, filename):
+    if not new_data.empty:
+        new_data.to_csv(filename, mode='a', header=False, index=False)
+        
+        
 # Load the Carbon Intensity data
 carbon_df = get_carbon_data()
 # Determine the date range for fetching new data
@@ -236,10 +242,6 @@ st.write(filtered_carbon_df.describe())
 
 
 
-# # Append new data to the CSV file
-# def append_new_data_to_csv(new_data, filename):
-#     if not new_data.empty:
-#         new_data.to_csv(filename, mode='a', header=False, index=False)
 
 # # Define intensity categories
 # def categorize_intensity(forecast):
