@@ -1,5 +1,5 @@
 import streamlit as st
-import matplotlib.pyplot as plt  # Import for plotting
+#import matplotlib.pyplot as plt  # Import for plotting
 import seaborn as sns  # Import for seaborn-based visualizations
 import pandas as pd
 from pathlib import Path
@@ -196,30 +196,26 @@ last_two_weeks_df['hour'] = last_two_weeks_df['from'].dt.hour  # Extract the hou
 
 st.header('📊 Boxplots for Carbon Intensity Over Last Two Weeks')
 
-# --- Boxplot for each day ---
-st.subheader('Distribution of Carbon Intensity by Day')
+# Add columns for 'day' and 'hour'
+carbon_df['day'] = carbon_df['from'].dt.date
+carbon_df['hour'] = carbon_df['from'].dt.hour
 
-fig_day, ax_day = plt.subplots(figsize=(10, 6))
-sns.boxplot(data=last_two_weeks_df, x='day', y='forecast', ax=ax_day)
-ax_day.set_title('Carbon Intensity Distribution by Day', fontsize=16)
-ax_day.set_xlabel('Day', fontsize=12)
-ax_day.set_ylabel('Forecast (gCO₂/kWh)', fontsize=12)
-plt.xticks(rotation=45)
+# Filter the data for the last two weeks
+last_two_weeks = carbon_df[carbon_df['from'] >= (carbon_df['from'].max() - pd.Timedelta(days=14))]
 
-# Show the boxplot in the Streamlit app
-st.pyplot(fig_day)
+# Boxplot by Day using Plotly
+fig_day = px.box(last_two_weeks, x='day', y='forecast', title='Carbon Intensity Forecast (gCO₂/kWh) by Day - Last 2 Weeks')
+fig_day.update_layout(xaxis_title='Day', yaxis_title='Forecast (gCO₂/kWh)', xaxis_tickangle=-45)
 
-# --- Boxplot for each hour ---
-st.subheader('Distribution of Carbon Intensity by Hour of the Day')
+# Display the day-based boxplot in Streamlit
+st.plotly_chart(fig_day)
 
-fig_hour, ax_hour = plt.subplots(figsize=(10, 6))
-sns.boxplot(data=last_two_weeks_df, x='hour', y='forecast', ax=ax_hour)
-ax_hour.set_title('Carbon Intensity Distribution by Hour of the Day', fontsize=16)
-ax_hour.set_xlabel('Hour of the Day', fontsize=12)
-ax_hour.set_ylabel('Forecast (gCO₂/kWh)', fontsize=12)
+# Boxplot by Hour using Plotly
+fig_hour = px.box(last_two_weeks, x='hour', y='forecast', title='Carbon Intensity Forecast (gCO₂/kWh) by Hour - Last 2 Weeks')
+fig_hour.update_layout(xaxis_title='Hour', yaxis_title='Forecast (gCO₂/kWh)')
 
-# Show the boxplot in the Streamlit app
-st.pyplot(fig_hour)
+# Display the hour-based boxplot in Streamlit
+st.plotly_chart(fig_hour)
 # --- Data Statistics and Filtering Section ---
 st.header('📅 Select Date Range and View Data')
 
