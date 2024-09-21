@@ -5,6 +5,7 @@ import pytz
 from datetime import datetime, timedelta
 import requests
 import matplotlib.pyplot as plt
+
 # Set the title and favicon for the browser tab
 st.set_page_config(page_title='Sunderland Carbon Intensity', page_icon=':earth_africa:')
 
