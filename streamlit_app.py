@@ -7,7 +7,7 @@ import pytz
 from datetime import datetime, timedelta
 import requests
 #import matplotlib.pyplot as plt
-
+import plotly.express as px  # Import Plotly for plotting
 # Set the title and favicon for the browser tab
 st.set_page_config(page_title='Sunderland Carbon Intensity', page_icon=':earth_africa:')
 
