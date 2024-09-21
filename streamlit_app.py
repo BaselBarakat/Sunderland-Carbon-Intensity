@@ -179,7 +179,43 @@ recent_df = carbon_df[carbon_df['from'] >= time_window]
 
 # Plot the line chart for recent carbon intensity
 st.line_chart(recent_df, x='from', y='forecast')
+# --- Boxplots for Last Two Weeks ---
 
+# Filter data for the last 14 days
+two_weeks_ago = current_time - pd.Timedelta(days=14)
+last_two_weeks_df = carbon_df[carbon_df['from'] >= two_weeks_ago].copy()
+
+# Add 'day' and 'hour' columns to the DataFrame
+# Extract the date and hour from the 'from' column
+last_two_weeks_df['day'] = last_two_weeks_df['from'].dt.date  # Extract the date
+last_two_weeks_df['hour'] = last_two_weeks_df['from'].dt.hour  # Extract the hour
+
+st.header('📊 Boxplots for Carbon Intensity Over Last Two Weeks')
+
+# --- Boxplot for each day ---
+st.subheader('Distribution of Carbon Intensity by Day')
+
+fig_day, ax_day = plt.subplots(figsize=(10, 6))
+sns.boxplot(data=last_two_weeks_df, x='day', y='forecast', ax=ax_day)
+ax_day.set_title('Carbon Intensity Distribution by Day', fontsize=16)
+ax_day.set_xlabel('Day', fontsize=12)
+ax_day.set_ylabel('Forecast (gCO₂/kWh)', fontsize=12)
+plt.xticks(rotation=45)
+
+# Show the boxplot in the Streamlit app
+st.pyplot(fig_day)
+
+# --- Boxplot for each hour ---
+st.subheader('Distribution of Carbon Intensity by Hour of the Day')
+
+fig_hour, ax_hour = plt.subplots(figsize=(10, 6))
+sns.boxplot(data=last_two_weeks_df, x='hour', y='forecast', ax=ax_hour)
+ax_hour.set_title('Carbon Intensity Distribution by Hour of the Day', fontsize=16)
+ax_hour.set_xlabel('Hour of the Day', fontsize=12)
+ax_hour.set_ylabel('Forecast (gCO₂/kWh)', fontsize=12)
+
+# Show the boxplot in the Streamlit app
+st.pyplot(fig_hour)
 # --- Data Statistics and Filtering Section ---
 st.header('📅 Select Date Range and View Data')
 
