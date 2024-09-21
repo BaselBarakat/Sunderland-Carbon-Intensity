@@ -184,19 +184,6 @@ recent_df = carbon_df[carbon_df['from'] >= time_window]
 
 # Plot the line chart for recent carbon intensity
 st.line_chart(recent_df, x='from', y='forecast')
-# --- Boxplots for Last Two Weeks ---
-
-# Filter data for the last 14 days
-two_weeks_ago = current_time - pd.Timedelta(days=14)
-last_two_weeks_df = carbon_df[carbon_df['from'] >= two_weeks_ago].copy()
-
-# Add 'day' and 'hour' columns to the DataFrame
-# Extract the date and hour from the 'from' column
-last_two_weeks_df['day'] = last_two_weeks_df['from'].dt.date  # Extract the date
-last_two_weeks_df['hour'] = last_two_weeks_df['from'].dt.hour  # Extract the hour
-
-st.header('📊 Boxplots for Carbon Intensity Over Last Two Weeks')
-
 # Add columns for 'day' and 'hour'
 carbon_df['day'] = carbon_df['from'].dt.date
 carbon_df['hour'] = carbon_df['from'].dt.hour
@@ -204,19 +191,29 @@ carbon_df['hour'] = carbon_df['from'].dt.hour
 # Filter the data for the last two weeks
 last_two_weeks = carbon_df[carbon_df['from'] >= (carbon_df['from'].max() - pd.Timedelta(days=14))]
 
-# Boxplot by Day using Plotly
-fig_day = px.box(last_two_weeks, x='day', y='forecast', title='Carbon Intensity Forecast (gCO₂/kWh) by Day - Last 2 Weeks')
-fig_day.update_layout(xaxis_title='Day', yaxis_title='Forecast (gCO₂/kWh)', xaxis_tickangle=-45)
+# Boxplot by Day using Altair (for the last 2 weeks)
+boxplot_day = alt.Chart(last_two_weeks).mark_boxplot().encode(
+    x=alt.X('day:T', title='Day'),
+    y=alt.Y('forecast:Q', title='Carbon Intensity (gCO₂/kWh)')
+).properties(
+    title='Carbon Intensity Forecast (gCO₂/kWh) by Day - Last 2 Weeks',
+    width=600
+)
 
-# Display the day-based boxplot in Streamlit
-st.plotly_chart(fig_day)
+# Display day-based boxplot in Streamlit
+st.altair_chart(boxplot_day)
 
-# Boxplot by Hour using Plotly
-fig_hour = px.box(last_two_weeks, x='hour', y='forecast', title='Carbon Intensity Forecast (gCO₂/kWh) by Hour - Last 2 Weeks')
-fig_hour.update_layout(xaxis_title='Hour', yaxis_title='Forecast (gCO₂/kWh)')
+# Boxplot by Hour using Altair
+boxplot_hour = alt.Chart(last_two_weeks).mark_boxplot().encode(
+    x=alt.X('hour:O', title='Hour'),
+    y=alt.Y('forecast:Q', title='Carbon Intensity (gCO₂/kWh)')
+).properties(
+    title='Carbon Intensity Forecast (gCO₂/kWh) by Hour - Last 2 Weeks',
+    width=600
+)
 
-# Display the hour-based boxplot in Streamlit
-st.plotly_chart(fig_hour)
+# Display hour-based boxplot in Streamlit
+st.altair_chart(boxplot_hour)
 # --- Data Statistics and Filtering Section ---
 st.header('📅 Select Date Range and View Data')
 
