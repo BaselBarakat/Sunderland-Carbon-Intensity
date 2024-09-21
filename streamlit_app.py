@@ -199,7 +199,7 @@ boxplot_day = alt.Chart(last_two_weeks).mark_boxplot().encode(
     title='Carbon Intensity Forecast (gCO₂/kWh) by Day - Last 2 Weeks',
     width=600
 )
-st.header('🔬 Carbon Intensity Forecast (gCO₂/kWh) by Hour - Last 2 Weeks')
+st.header('📆 Carbon Intensity Forecast (gCO₂/kWh) by Day - Last 2 Weeks')
 # Display day-based boxplot in Streamlit
 st.altair_chart(boxplot_day)
 
@@ -211,6 +211,7 @@ boxplot_hour = alt.Chart(last_two_weeks).mark_boxplot().encode(
     # title='Carbon Intensity Forecast (gCO₂/kWh) by Hour - Last 2 Weeks',
     width=600
 )
+st.header('🕖 Carbon Intensity Forecast (gCO₂/kWh) by Hour - Last 2 Weeks')
 
 # Display hour-based boxplot in Streamlit
 st.altair_chart(boxplot_hour)
