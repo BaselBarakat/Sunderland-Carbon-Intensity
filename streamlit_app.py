@@ -235,7 +235,7 @@ color_map = {
 st.markdown(f'<h3>Intensity Status: <span style="color:{color_map[latest_index]};">{latest_index}</span></h3>', unsafe_allow_html=True)
 
 # Display a progress bar to visually indicate the intensity category
-st.progress(int((latest_forecast / 250) * 100))  # Assuming 250 is the upper limit for "Very High"
+st.progress(int((latest_forecast / 400) * 100))  # Assuming 400 is the upper limit for "Very High"
 
 # --- Carbon Intensity Over Time Section ---
 st.header('📊 Carbon Intensity Over Time')
