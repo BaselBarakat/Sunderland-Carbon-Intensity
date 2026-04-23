@@ -14,7 +14,8 @@ st.set_page_config(page_title='Sunderland Carbon Intensity', page_icon=':earth_a
 def get_carbon_data():
     DATA_FILENAME = Path(__file__).parent / 'data/carbon.csv'
     if DATA_FILENAME.exists():
-        raw_carbon_df = pd.read_csv(DATA_FILENAME, parse_dates=['from', 'to'], infer_datetime_format=True)
+        # raw_carbon_df = pd.read_csv(DATA_FILENAME, parse_dates=['from', 'to'], infer_datetime_format=True)
+        raw_carbon_df = pd.read_csv(DATA_FILENAME, parse_dates=['from', 'to'])
         raw_carbon_df['from'] = pd.to_datetime(raw_carbon_df['from'], utc=True)
         raw_carbon_df['to'] = pd.to_datetime(raw_carbon_df['to'], utc=True)
     else:
